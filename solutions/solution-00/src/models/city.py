@@ -1,10 +1,11 @@
 from src.models.base import Base
 from src.models.country import Country
+from src import db
 
 
 class City(Base):
-    name: str
-    country_code: str
+    name = db.Column(db.String(50), unique=True, nullable=False)
+    country_code = db.Column(db.String(5), unique=True, nullable=False)
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
         super().__init__(**kw)

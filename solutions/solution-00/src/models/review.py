@@ -1,13 +1,18 @@
 from src.models.base import Base
 from src.models.place import Place
 from src.models.user import User
+from src import db
 
 
 class Review(Base):
-    place_id: str
-    user_id: str
-    comment: str
-    rating: float
+    place_id = db.Column(
+        db.String(36), db.ForeignKey("place.id"), nullable=False
+    )
+    user_id = db.Column(
+        db.String(36), db.ForeignKey("user.id"), nullable=False
+    )
+    comment = db.Column(db.Text, nullable=False)
+    rating = db.Column(db.Float, nullable=False)
 
     def __init__(
         self, place_id: str, user_id: str, comment: str, rating: float, **kw

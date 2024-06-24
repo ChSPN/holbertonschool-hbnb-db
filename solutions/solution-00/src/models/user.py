@@ -1,12 +1,15 @@
 from src.models.base import Base
+from src import db
 
 
 class User(Base):
-    email: str
-    first_name: str
-    last_name: str
+    email = db.Column(db.String(200), unique=True, nullable=False)
+    first_name = db.Column(db.String(100), unique=False, nullable=False)
+    last_name = db.Column(db.String(100), unique=False, nullable=False)
 
-    def __init__(self, email: str, first_name: str, last_name: str, **kw) -> None:
+    def __init__(
+        self, email: str, first_name: str, last_name: str, **kw
+    ) -> None:
         super().__init__(**kw)
         self.email = email
         self.first_name = first_name
