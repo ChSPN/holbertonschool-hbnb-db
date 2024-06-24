@@ -1,7 +1,9 @@
 from flask import Flask
+from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 
 cors = CORS()
+db = SQLAlchemy()
 
 
 def create_app(config_class=None) -> Flask:
@@ -14,7 +16,7 @@ def create_app(config_class=None) -> Flask:
     else:
         app.config.from_object("src.config.DevelopmentConfig")
 
-    # db.init_app(app)
+    db.init_app(app)
     cors.init_app(app, resources={r"/api/*": {"origins": "*"}})
 
     from src.routes.users import users_bp
