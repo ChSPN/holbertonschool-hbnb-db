@@ -21,6 +21,7 @@ from src.models.country import Country
 from src.models.place import Place
 from src.models.review import Review
 from src.models.user import User
+from utils.populate import populate_db
 
 
 class DBRepository(Repository):
@@ -34,14 +35,16 @@ class DBRepository(Repository):
             "user": User,
             "review": Review,
         }
+        self.reload()
 
     def get_all(self, model_name: str) -> list:
-        return self.models.get(model_name).query.all()
+        return self.models.get(model_name.lower()).query.all()
 
     def get(self, model_name: str, obj_id: str):
-        return self.models.get(model_name).query.get(obj_id)
+        return self.models.get(model_name.lower()).query.get(obj_id)
 
-    def reload(self): ...
+    def reload(self):
+        populate_db(self)
 
     def save(self, obj: Base):
         db.session.add(obj)
@@ -49,22 +52,22 @@ class DBRepository(Repository):
 
     def update(self, obj: Base):
         # Étape 1 : Récupérer l'objet
-        obj = self.get(obj.id)
-        if not obj:
+        model = self.get(type(obj).__name__, obj.id)
+        if not model:
             return None  # L'objet n'a pas été trouvé
 
         # Étape 2 : Modifier les attributs
-        for key, value in obj.__dict__:
-            setattr(obj, key, value)
+        for key, value in obj.__dict__.items():
+            setattr(model, key, value)
 
         # Étape 3 : Ajouter l'objet modifié à la session
-        db.session.add(obj)
+        db.session.add(model)
 
         # Étape 4 : Valider la session
         try:
             db.session.commit()
             return obj
-        except Exception as e:
+        except Exception:
             db.session.rollback()  # Annuler les modifications en cas d'erreur
             return None
 

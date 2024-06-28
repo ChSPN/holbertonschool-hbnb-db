@@ -8,7 +8,11 @@ class User(Base):
     last_name = db.Column(db.String(100), unique=False, nullable=False)
 
     def __init__(
-        self, email: str, first_name: str, last_name: str, **kw
+        self,
+        email: str,
+        first_name: str,
+        last_name: str,
+        **kw,
     ) -> None:
         super().__init__(**kw)
         self.email = email

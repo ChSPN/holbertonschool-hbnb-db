@@ -3,6 +3,7 @@ import json
 from src.models.base import Base
 from src.persistence.repository import Repository
 from utils.constants import FILE_STORAGE_FILENAME
+from utils.populate import populate_db
 
 
 class FileRepository(Repository):
@@ -19,6 +20,7 @@ class FileRepository(Repository):
 
     def __init__(self) -> None:
         self.reload()
+        populate_db(self)
 
     def _save_to_file(self):
         serialized = {
@@ -68,9 +70,13 @@ class FileRepository(Repository):
                 instance: Base = models[model](**item)
 
                 if "created_at" in item:
-                    instance.created_at = datetime.fromisoformat(item["created_at"])
+                    instance.created_at = datetime.fromisoformat(
+                        item["created_at"]
+                    )
                 if "updated_at" in item:
-                    instance.updated_at = datetime.fromisoformat(item["updated_at"])
+                    instance.updated_at = datetime.fromisoformat(
+                        item["updated_at"]
+                    )
 
                 self.save(data=instance, save_to_file=False)
 

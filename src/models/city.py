@@ -4,8 +4,10 @@ from src import db
 
 
 class City(Base):
-    name = db.Column(db.String(50), unique=True, nullable=False)
-    country_code = db.Column(db.String(5), unique=True, nullable=False)
+    name = db.Column(db.String(50), unique=False, nullable=False)
+    country_code = db.Column(
+        db.String(5), db.ForeignKey("country.code"), nullable=False
+    )
 
     def __init__(self, name: str, country_code: str, **kw) -> None:
         super().__init__(**kw)

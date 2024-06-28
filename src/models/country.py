@@ -4,7 +4,7 @@ from src import db
 class Country(db.Model):
     __allow_unmapped__ = True
     name = db.Column(db.String(50), unique=True, nullable=False)
-    country_code = db.Column(db.String(5), primary_key=True, nullable=False)
+    code = db.Column(db.String(5), primary_key=True, nullable=False)
     cities: list
 
     def __init__(self, name: str, code: str, **kw) -> None:
